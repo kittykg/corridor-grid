@@ -66,7 +66,7 @@ class SpecialStateCorridorEnvCustomisationConfig:
         start_state = (
             config_dict["start_state"] if "start_state" in config_dict else None
         )
-        if start_state:
+        if start_state is not None:
             assert start_state >= 0, "Start state must be non-negative"
             assert (
                 start_state < corridor_length
@@ -147,8 +147,8 @@ class BaseSpecialStateCorridorEnv(gym.Env):
     """
 
     metadata = {
-        "render.modes": ["human", "ansi", "rgb_array"],
-        "render.fps": RENDER_FPS,
+        "render_modes": ["human", "ansi", "rgb_array"],
+        "render_fps": RENDER_FPS,
     }
     render_mode: Optional[str]
 
@@ -181,7 +181,7 @@ class BaseSpecialStateCorridorEnv(gym.Env):
 
         if render_mode:
             assert (
-                render_mode in self.metadata["render.modes"]
+                render_mode in self.metadata["render_modes"]
             ), f"Invalid render mode: {render_mode}"
         self.render_mode = render_mode
         customisation_cfg = (
@@ -249,7 +249,7 @@ class BaseSpecialStateCorridorEnv(gym.Env):
         seed: Optional[int] = None,
         options: Optional[dict[str, Any]] = None,
     ) -> tuple[ObservationType, dict[str, Any]]:
-        if self.start_state:
+        if self.start_state is not None:
             # There is a fixed start
             self._agent_location = self.start_state
         else:
@@ -269,7 +269,7 @@ class BaseSpecialStateCorridorEnv(gym.Env):
             "distance_to_goal": self._get_distance_to_goal(),
         }
 
-    def render(self) -> Optional[str]:
+    def render(self) -> str | npt.NDArray[np.uint8] | None:
         return self._render_frame()
 
     def close(self) -> None:
@@ -291,7 +291,7 @@ class BaseSpecialStateCorridorEnv(gym.Env):
         window_h = pygame_square_size
         return window_w, window_h, pygame_square_size
 
-    def _render_frame(self) -> Optional[str]:
+    def _render_frame(self) -> str | npt.NDArray[np.uint8] | None:
         # Instantiate pygame if not already done
         if self.window is None and self.render_mode == "human":
             window_w, window_h, _ = self._get_pygame_window_square_dimension()
@@ -310,7 +310,9 @@ class BaseSpecialStateCorridorEnv(gym.Env):
             )
             pygame.event.pump()
             pygame.display.update()
-            self.clock.tick(self.metadata["render.fps"])
+            self.clock.tick(self.metadata["render_fps"])
+        elif self.render_mode == "rgb_array":
+            return self._render_rgb_array_mode()
         else:  # mode == "ansi"
             return self._render_frame_ansi_mode()
 
@@ -380,6 +382,11 @@ class BaseSpecialStateCorridorEnv(gym.Env):
         base_str[self._agent_location] = "*"
 
         return "[" + "|".join(base_str) + "]"
+
+    def _render_rgb_array_mode(self) -> npt.NDArray[np.uint8]:
+        return pygame.surfarray.array3d(
+            self._render_frame_human_pygame_canvas_gen()
+        )
 
     def _get_distance_to_goal(self) -> int:
         return abs(self._agent_location - self.goal_state)
