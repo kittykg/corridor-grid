@@ -1,4 +1,5 @@
 import argparse
+from typing import Any
 
 import pygame
 import gymnasium as gym
@@ -6,6 +7,7 @@ from gymnasium import Env
 
 import corridor_grid
 from corridor_grid.envs.base_ss_corridor import BaseSpecialStateCorridorEnv
+from corridor_grid.envs.door_corridor import DoorCorridorEnv, DoorCorridorAction
 
 
 class ManualControl:
@@ -49,18 +51,6 @@ class ManualControl:
         self.env.render()
 
     def key_handler(self, event: pygame.event.Event):
-        raise NotImplementedError
-
-
-class SpecialStateCorridorManualControl(ManualControl):
-    env: BaseSpecialStateCorridorEnv
-
-    def __init__(
-        self, env: BaseSpecialStateCorridorEnv, seed: int | None = None
-    ) -> None:
-        super().__init__(env, seed=seed)
-
-    def key_handler(self, event: pygame.event.Event):
         key: str = event.key
         print("pressed", key)
 
@@ -72,15 +62,48 @@ class SpecialStateCorridorManualControl(ManualControl):
             self.reset()
             return
 
-        key_to_action = {
-            "left": 0,
-            "right": 1,
-        }
+        key_to_action = self._get_key_to_action_map()
         if key in key_to_action.keys():
             action = key_to_action[key]
             self.step(action)
         else:
             print(key)
+
+    @staticmethod
+    def _get_key_to_action_map() -> dict[str, Any]:
+        raise NotImplementedError
+
+
+class SpecialStateCorridorManualControl(ManualControl):
+    env: BaseSpecialStateCorridorEnv
+
+    def __init__(
+        self, env: BaseSpecialStateCorridorEnv, seed: int | None = None
+    ) -> None:
+        super().__init__(env, seed=seed)
+
+    @staticmethod
+    def _get_key_to_action_map() -> dict[str, Any]:
+        return {
+            "left": 0,
+            "right": 1,
+        }
+
+
+class DoorCorridorManualControl(ManualControl):
+    env: DoorCorridorEnv
+
+    def __init__(self, env: DoorCorridorEnv, seed: int | None = None) -> None:
+        super().__init__(env, seed=seed)
+
+    @staticmethod
+    def _get_key_to_action_map() -> dict[str, Any]:
+        return {
+            "left": DoorCorridorAction.LEFT,
+            "right": DoorCorridorAction.RIGHT,
+            "up": DoorCorridorAction.FORWARD,
+            "space": DoorCorridorAction.TOGGLE,
+        }
 
 
 if __name__ == "__main__":
@@ -99,8 +122,11 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    env: BaseSpecialStateCorridorEnv = gym.make(
-        args.env_id, render_mode="human"
-    )  # type: ignore
-    manual_control = SpecialStateCorridorManualControl(env, seed=args.seed)
+    env = gym.make(args.env_id, render_mode="human")
+    if "CG-DC" in args.env_id:
+        mc_class = DoorCorridorManualControl
+    else:
+        mc_class = SpecialStateCorridorManualControl
+
+    manual_control = mc_class(env, seed=args.seed)  # type: ignore
     manual_control.start()

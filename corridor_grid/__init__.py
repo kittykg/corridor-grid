@@ -78,3 +78,14 @@ register(
         }
     },
 )
+
+# Door Corridor 5 (DC5)
+# Corridor length 5
+# Start at state 0
+# Goal at state 4
+# Agent facing up at the beginning
+# Doors at state 1, 2, 3
+register(
+    id="CG-DC5-v0",
+    entry_point="corridor_grid.envs:DoorCorridorEnv",
+)
