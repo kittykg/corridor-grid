@@ -3,7 +3,7 @@ from typing import Any, Optional
 from corridor_grid.envs.base_ss_corridor import BaseSpecialStateCorridorEnv
 
 
-class SmallCorridorEnv(BaseSpecialStateCorridorEnv):
+class SmallSSCorridorEnv(BaseSpecialStateCorridorEnv):
     """
     The basic small corridor environment.
     This is a special case of the base `BaseSpecialStateCorridorEnv` with the following
@@ -34,7 +34,7 @@ class SmallCorridorEnv(BaseSpecialStateCorridorEnv):
             )
 
 
-class LongCorridorEnv(BaseSpecialStateCorridorEnv):
+class LongSSCorridorEnv(BaseSpecialStateCorridorEnv):
     """
     The fully customisable corridor environment.
     Can adjust the length, the start, the goal and the special states of the
@@ -53,18 +53,3 @@ class LongCorridorEnv(BaseSpecialStateCorridorEnv):
         customisation_cfg_dict: dict[str, Any] = dict(),
     ) -> None:
         super().__init__(render_mode, customisation_cfg_dict)
-
-
-# if __name__ == "__main__":
-#     # env = SmallCorridorEnv(render_mode="human")
-#     env = LongCorridorEnv(
-#         render_mode="human",
-#         customisation_cfg_dict={
-#             "corridor_length": 5,
-#             "start_state": 0,
-#             "goal_state": 4,
-#             "special_states": [2, 3],
-#         },
-#     )
-#     env.reset()
-#     input("Type anything in the console to quit.\n")
