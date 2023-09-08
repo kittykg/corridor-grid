@@ -13,6 +13,14 @@ A list of environments are registered:
 | CG-CC11-v0   | Circular Special State Corridor |
 | CG-DC5-v0    | Door Corridor                   |
 
+## How to Use
+
+Install this package in editable mode:
+
+```pip install -e . --config-settings editable_mode=strict```
+
+The config setting flag is used for resolving Pylance's issue with importing.
+
 ## Special State Corridor
 
 Special state corridor environment contains states that reverse the action taken
