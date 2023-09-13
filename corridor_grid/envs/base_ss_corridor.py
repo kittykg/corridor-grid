@@ -386,7 +386,7 @@ class BaseSpecialStateCorridorEnv(gym.Env):
     def _render_rgb_array_mode(self) -> npt.NDArray[np.uint8]:
         return pygame.surfarray.array3d(
             self._render_frame_human_pygame_canvas_gen()
-        )
+        ).swapaxes(0, 1)
 
     def _get_distance_to_goal(self) -> int:
         return abs(self._agent_location - self.goal_state)

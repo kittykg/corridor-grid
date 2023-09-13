@@ -50,8 +50,9 @@ class CircularSSCorridorEnv(BaseSpecialStateCorridorEnv):
 
     # Overridden functions
     def _get_pygame_window_square_dimension(self) -> tuple[int, int, int]:
-        # Since the corridor is circular, we don't have square size anymore. The
-        # last return value is now a placeholder value and should not be used.
+        # Since the corridor is circular, we don't have square size any more.
+        # The last return value is now a placeholder value and should not be
+        # used.
         return PYGAME_WINDOW_SIZE, PYGAME_WINDOW_SIZE, PYGAME_WINDOW_SIZE
 
     def _render_frame_human_pygame_canvas_gen(self) -> pygame.Surface:
