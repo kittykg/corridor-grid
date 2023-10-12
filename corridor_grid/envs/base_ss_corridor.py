@@ -176,6 +176,8 @@ class BaseSpecialStateCorridorEnv(gym.Env):
         self,
         render_mode: Optional[str] = None,
         customisation_cfg_dict: dict[str, Any] = dict(),
+        action_space_seed: int | None = 1,
+        obs_space_seed: int | None = 2,
     ) -> None:
         super().__init__()
 
@@ -196,14 +198,17 @@ class BaseSpecialStateCorridorEnv(gym.Env):
         self.special_states = customisation_cfg.special_states
         self.customisation_cfg = customisation_cfg
 
-        self.action_space = spaces.Discrete(len(self.ACTION))
+        self.action_space = spaces.Discrete(
+            len(self.ACTION), seed=action_space_seed
+        )
         self.observation_space = spaces.Dict(
             {
                 "wall_status": spaces.Box(
                     low=0, high=1, shape=(2,), dtype=np.int64
                 ),
                 "agent_location": spaces.Discrete(self.corridor_length),
-            }
+            },
+            seed=obs_space_seed,
         )
 
         self.window = None

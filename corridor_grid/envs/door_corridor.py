@@ -294,6 +294,10 @@ class DoorCorridorEnv(gym.Env[dict[str, Any], int]):
             pygame.display.quit()
             pygame.quit()
 
+    @staticmethod
+    def get_num_actions() -> int:
+        return len(DoorCorridorAction)
+
     def _in_front_of_agent_coord(self) -> tuple[int, int]:
         if self.agent_dir == AgentDirection.RIGHT:
             return (self.agent_pos[0] + 1, self.agent_pos[1])
