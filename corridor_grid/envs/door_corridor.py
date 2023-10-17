@@ -298,6 +298,27 @@ class DoorCorridorEnv(gym.Env[dict[str, Any], int]):
     def get_num_actions() -> int:
         return len(DoorCorridorAction)
 
+    @staticmethod
+    def observation_image_to_one_hot(
+        img: npt.NDArray[np.uint8],
+    ) -> npt.NDArray[np.int8]:
+        # `img` is expected to be AGENT_VIEW_SIZE x AGENT_VIEW_SIZE x 2, where
+        # the first bit of the third chanel represents the object type and the
+        # second bit represents the state of the object.
+        # We convert this to a one-hot encoding of size
+        # AGENT_VIEW_SIZE x AGENT_VIEW_SIZE x 7. The first 6 bits of the third
+        # channel represent the object type. Since there are only 2 values for
+        # `State`, we use a single bit to represent if the state is closed or
+        # not (0 = open, 1 = closed).
+        one_hot = np.zeros(
+            (img.shape[0], img.shape[1], len(Object) + 1), dtype=np.int8
+        )
+        for y in range(img.shape[0]):
+            for x in range(img.shape[1]):
+                one_hot[y, x, img[y, x, 0]] = 1
+                one_hot[y, x, -1] = img[y, x, 1]
+        return one_hot
+
     def _in_front_of_agent_coord(self) -> tuple[int, int]:
         if self.agent_dir == AgentDirection.RIGHT:
             return (self.agent_pos[0] + 1, self.agent_pos[1])
