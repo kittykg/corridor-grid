@@ -265,7 +265,19 @@ class DoorCorridorEnv(gym.Env[dict[str, Any], int]):
         return img
 
     def get_pov_render(self, tile_size: int = 10) -> npt.NDArray[np.uint8]:
-        agent_pov = self._get_agent_pov()
+        return self.get_specific_pov_render(
+            agent_pov=self._get_agent_pov(), tile_size=tile_size
+        )
+
+    def get_specific_pov_render(
+        self, agent_pov: npt.NDArray[np.uint8], tile_size: int = 10
+    ) -> npt.NDArray[np.uint8]:
+        assert agent_pov.shape == (
+            self.agent_view_size,
+            self.agent_view_size,
+            2,
+        )
+
         img_w = self.agent_view_size * tile_size
         img = np.zeros((img_w, img_w, 3), dtype=np.uint8)
 
