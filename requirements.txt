@@ -1,4 +1,5 @@
 minigrid>=2.2.1
 numpy>=1.25.2
 gymnasium>=0.28.1
+pip >= 23.0.1
 pygame>=2.5.1
