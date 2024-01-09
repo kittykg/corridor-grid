@@ -182,7 +182,7 @@ class DoorCorridorEnv(gym.Env[dict[str, Any], int]):
                 self.grid[i_y, i_x, 1] = State(self.grid[i_y, i_x, 1]).toggle()
 
         agent_pov = self._get_agent_pov()
-        terminated = self.agent_pos == self.goal_pos
+        terminated = self._check_termination(action)
         truncated = self._step_count >= self.max_steps
 
         if self.render_mode == "human":
@@ -201,6 +201,9 @@ class DoorCorridorEnv(gym.Env[dict[str, Any], int]):
                 "agent_direction": self.agent_dir.name,
             },
         )
+
+    def _check_termination(self, action: ActionIntType) -> bool:
+        return self.agent_pos == self.goal_pos
 
     def reset(
         self, seed: int | None = None, options: dict[str, Any] | None = None
@@ -437,6 +440,53 @@ class DoorCorridorEnv(gym.Env[dict[str, Any], int]):
         pygame.event.pump()
         pygame.display.update()
         self.clock.tick(self.metadata["render_fps"])
+
+
+class DoorCorridorTEnv(DoorCorridorEnv):
+    """
+    A modified version of DoorCorridorEnv, but to finish the environment, the
+    agent must be in front of the goal state and toggle it instead of moving
+    onto it.
+    """
+
+    def _check_termination(self, action: ActionIntType) -> bool:
+        i_x, i_y = self._in_front_of_agent_coord()
+        if (
+            self._with_grid(i_x, i_y)
+            and self.grid[i_y, i_x, 0] == Object.GOAL
+            and self.grid[i_y, i_x, 1] == State.OPEN
+            and action == DoorCorridorAction.TOGGLE
+        ):
+            self.grid[i_y, i_x, 1] = State(self.grid[i_y, i_x, 1]).toggle()
+            return True
+
+        return False
+
+
+class DoorCorridorOTEnv(DoorCorridorEnv):
+    """
+    A modified version of DoorCorridorEnv, but to finish the environment, the
+    agent must stand on the goal state and toggle it.
+    """
+
+    def _check_termination(self, action: ActionIntType) -> bool:
+        # Also toggle the goal state if the agent is standing on it
+        if action == DoorCorridorAction.TOGGLE:
+            i_x, i_y = self.agent_pos
+            if (
+                self._with_grid(i_x, i_y)
+                and self.grid[i_y, i_x, 0] == Object.GOAL
+            ):
+                self.grid[i_y, i_x, 1] = State(self.grid[i_y, i_x, 1]).toggle()
+
+        # The agent must be standing on the goal state and the goal state must
+        # be open for the environment to terminate
+        g_x, g_y = self.goal_pos
+        return (
+            self.agent_pos == self.goal_pos
+            and self.grid[g_y, g_x, 0] == Object.GOAL
+            and self.grid[g_y, g_x, 1] == State.CLOSED
+        )
 
 
 # The functions below are adapted from the rendering functions in the minigrid

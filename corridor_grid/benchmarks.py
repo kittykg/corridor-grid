@@ -9,6 +9,7 @@ import corridor_grid
 def benchmark(env_id: str, num_resets: int, num_frames: int):
     env = gym.make(env_id, render_mode="rgb_array")
     # Benchmark env.reset
+    print("Benchmarking env.reset()...")
     t0 = time.time()
     for _ in range(num_resets):
         env.reset()
@@ -17,6 +18,7 @@ def benchmark(env_id: str, num_resets: int, num_frames: int):
     reset_time = (1000 * dt) / num_resets
 
     # Benchmark rendering
+    print("Benchmarking env.render()...")
     t0 = time.time()
     for _ in range(num_frames):
         env.render()
@@ -26,6 +28,7 @@ def benchmark(env_id: str, num_resets: int, num_frames: int):
 
     # Benchmark rendering in agent view
     env.reset()
+    print("Benchmarking env.step(0)...")
     t0 = time.time()
     for _ in range(num_frames):
         env.step(0)
@@ -59,7 +62,7 @@ if __name__ == "__main__":
         "--num-frames",
         type=int,
         help="number of frames to test rendering for",
-        default=5000,
+        default=100,
     )
 
     args = parser.parse_args()
