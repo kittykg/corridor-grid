@@ -3,7 +3,7 @@ from gymnasium.envs.registration import register
 __version__ = "0.0.1"
 
 
-# Small Special State Corridor (SC)
+# Small Corridor (SC)
 # Start at state 0, special state at state1, goal at state 3
 # ----------------------------------------
 
@@ -12,7 +12,7 @@ register(
     entry_point="corridor_grid.envs:SmallSSCorridorEnv",
 )
 
-# Long Special State Corridor 5 (LC5)
+# Long Corridor 5 (LC5)
 # Corridor length 5
 # Start at state 0
 # Special state at state 1
@@ -24,7 +24,7 @@ register(
     kwargs={"customisation_cfg_dict": {"corridor_length": 5, "start_state": 0}},
 )
 
-# Long Special State Corridor 5 Special State 2 (LC5-S2)
+# Long Corridor 5 Special State 2 (LC5-S2)
 # Corridor length 5
 # Start at state 0
 # Special state at state 2
@@ -42,7 +42,7 @@ register(
     },
 )
 
-# Long Special State Corridor 11 (LC11)
+# Long Corridor 11 (LC11)
 # Corridor length 11
 # Start at state 7
 # Special state at state 5, 6, 7, 8
@@ -61,7 +61,7 @@ register(
     },
 )
 
-# Circular Special State Corridor 11 (CC11)
+# Circular Corridor 11 (CC11)
 # Corridor length 11
 # Start at state 9
 # Special state at state 1, 2, 10

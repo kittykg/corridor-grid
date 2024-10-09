@@ -4,26 +4,28 @@ A set of corridor environments.
 
 A list of environments are registered:
 
-|      ID      |              Type               |
-|--------------|---------------------------------|
-| CG-SC-v0     | Small Special State Corridor    |
-| CG-LC5-v0    | Long Special State Corridor     |
-| CG-LC5-S2-v0 | Long Special State Corridor     |
-| CG-LC11-v0   | Long Special State Corridor     |
-| CG-CC11-v0   | Circular Special State Corridor |
-| CG-DC5-v0    | Door Corridor                   |
+|      ID      |    Type           |
+|--------------|-------------------|
+| CG-SC-v0     | Small Corridor    |
+| CG-LC5-v0    | Long Corridor     |
+| CG-LC5-S2-v0 | Long Corridor     |
+| CG-LC11-v0   | Long Corridor     |
+| CG-CC11-v0   | Circular Corridor |
+| CG-DC5-v0    | Door Corridor     |
 
 ## How to Use
 
 Install this package in editable mode:
 
-```pip install -e . --config-settings editable_mode=strict```
+```bash
+pip install -e . --config-settings editable_mode=strict
+```
 
 The config setting flag is used for resolving Pylance's issue with importing.
 
-## Special State Corridor
+## Switcheroo Corridor / Special State Corridor
 
-Special state corridor environment contains states that reverse the action taken
+Switcheroo corridor (or special state corridor) environment contains states that reverse the action taken
 by the agent: in the special state, if the agent takes action left it will
 actually move right and vice versa.
 
@@ -35,9 +37,9 @@ since only moveable directions are left and right) as well as the state number
 
 The reward is -1 per step to encourage shortest path taken.
 
-### Small Special State Corridor
+### Small Corridor
 
-A special state corridor with only 4 states. The agent starts at the end (state
+A Switcheroo corridor with only 4 states. The agent starts at the end (state
 0) and the goal is to reach the other end (state 3). This environment is an
 implementation of the environment from Chapter 13.1 (Page 323) in the book: 
 Reinforcement Learning An Introduction (second edition) by Richard Sutton and
@@ -71,16 +73,17 @@ We provide two 3 pre-configured and registered long corridor environments:
 | CG-LC11-v0   | `{"corridor_length": 11, "start_state": 7, "goal_state": 3, "special_states": [5, 6, 7, 8]}` |
 
 Below is a figure of CG-LC11-v0:
+
 ![cg-lc11-v0](figure/cg-lc11.png)
 
-### Circular Special State Corridor
+### Circular Switcheroo Corridor
 
 This extends the long corridor where the two ends of the corridor are connected.
 So there is no end to the corridor, which results in the every state will have
 the same wall status of `[0, 0]`. The customisation options are the same as the
-long special state corridor.
+Long Corridor.
 
-We provide a pre-configured and registered circular special state corridor:
+We provide a pre-configured and registered circular Switcheroo corridor:
 `CG-CC11-v0`. The config is `{"corridor_length": 11, "start_state": 9,
 "goal_state": 3, "special_states": [1, 2, 10]}`. Below is a figure of
 `CG-CC11-v0`:
@@ -111,17 +114,20 @@ This image observation is encoded as a 3x3x2 tensor, where the last dimension
 contains the object number and state status. The objects are:
 
 ```
+
 UNSEEN = 0
 EMPTY = 1
 WALL = 2
 DOOR = 3
 AGENT = 4
 GOAL = 5
+
 ```
 
 And the state status are:
 
 ```
+
 OPEN = 0
 CLOSED = 1
 ```

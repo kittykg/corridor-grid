@@ -1,10 +1,10 @@
 from dataclasses import dataclass, replace
 from typing import Any, Optional
 
-import numpy as np
-import numpy.typing as npt
 import gymnasium as gym
 from gymnasium import spaces
+import numpy as np
+import numpy.typing as npt
 import pygame
 
 
