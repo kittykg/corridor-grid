@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from corridor_grid.envs.base_ss_corridor import BaseSpecialStateCorridorEnv
 
@@ -6,15 +6,15 @@ from corridor_grid.envs.base_ss_corridor import BaseSpecialStateCorridorEnv
 class SmallSSCorridorEnv(BaseSpecialStateCorridorEnv):
     """
     The basic small corridor environment.
-    This is a special case of the base `BaseSpecialStateCorridorEnv` with the following
-    configuration:
+    This is a special case of the base `BaseSpecialStateCorridorEnv` with the
+    following configuration:
     State 0 (start), State 1 (special state), State 2, State 3 (goal state)
     """
 
     def __init__(
         self,
-        render_mode: Optional[str] = None,
-        truncate_tolerance: Optional[int] = None,
+        render_mode: str | None = None,
+        truncate_tolerance: int | None = None,
     ) -> None:
         super().__init__(
             render_mode=render_mode,
@@ -49,7 +49,7 @@ class LongSSCorridorEnv(BaseSpecialStateCorridorEnv):
 
     def __init__(
         self,
-        render_mode: Optional[str] = None,
+        render_mode: str | None = None,
         customisation_cfg_dict: dict[str, Any] = dict(),
     ) -> None:
         super().__init__(render_mode, customisation_cfg_dict)

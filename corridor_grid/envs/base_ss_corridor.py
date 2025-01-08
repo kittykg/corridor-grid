@@ -1,5 +1,5 @@
 from dataclasses import dataclass, replace
-from typing import Any, Optional
+from typing import Any
 
 import gymnasium as gym
 from gymnasium import spaces
@@ -150,7 +150,7 @@ class BaseSpecialStateCorridorEnv(gym.Env):
         "render_modes": ["human", "ansi", "rgb_array"],
         "render_fps": RENDER_FPS,
     }
-    render_mode: Optional[str]
+    render_mode: str | None
 
     ACTION = ["L", "R"]
 
@@ -169,12 +169,12 @@ class BaseSpecialStateCorridorEnv(gym.Env):
     _agent_location: int
     _internal_step_counter: int
 
-    window: Optional[pygame.Surface]
-    clock: Optional[pygame.time.Clock]
+    window: pygame.Surface | None
+    clock: pygame.time.Clock | None
 
     def __init__(
         self,
-        render_mode: Optional[str] = None,
+        render_mode: str | None = None,
         customisation_cfg_dict: dict[str, Any] = dict(),
         action_space_seed: int | None = 1,
         obs_space_seed: int | None = 2,
@@ -251,8 +251,8 @@ class BaseSpecialStateCorridorEnv(gym.Env):
 
     def reset(
         self,
-        seed: Optional[int] = None,
-        options: Optional[dict[str, Any]] = None,
+        seed: int | None = None,
+        options: dict[str, Any] | None = None,
     ) -> tuple[ObservationType, dict[str, Any]]:
         if self.start_state is not None:
             # There is a fixed start

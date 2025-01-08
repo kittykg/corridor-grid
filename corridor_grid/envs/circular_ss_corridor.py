@@ -1,5 +1,5 @@
 import math
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 import pygame
@@ -43,7 +43,7 @@ class CircularSSCorridorEnv(BaseSpecialStateCorridorEnv):
 
     def __init__(
         self,
-        render_mode: Optional[str] = None,
+        render_mode: str | None = None,
         customisation_cfg_dict: dict[str, Any] = dict(),
     ) -> None:
         super().__init__(render_mode, customisation_cfg_dict)
